@@ -1,0 +1,17 @@
+# Python stuff
+*.coverage*
+*.egg-info
+*.log
+*.pyc
+*venv
+.ipynb_checkpoints/
+*Untitled*.ipynb
+
+# IDEs
+.vscode/
+.idea/*
+.classpath
+.settings/
+.project
+.pydevproject
+/bin/

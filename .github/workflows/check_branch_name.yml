@@ -1,0 +1,17 @@
+name: Check branch name
+
+on:
+  push:
+    branches-ignore:
+      - 'master'
+      - 'develop'
+      - 'refs/tags/**'
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: deepakputhraya/action-branch-name@v1.0.0
+      with:
+        allowed_prefixes: test,feat,fix,chore,docs,refactor,style,ci,perf,revert,dependabot

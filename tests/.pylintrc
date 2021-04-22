@@ -1,0 +1,19 @@
+[MESSAGES CONTROL]
+# C0111 - Missing DocString
+# R0801 - Similar lines in 2 files
+# R0903 - Too few public methods
+# R0913 - Too many method arguments
+# R1705 - Unecessary "else" after "return"
+# W0212 - Access to a protected member
+# W1202 - logging-fstring-interpolation
+# W1203 - logging-format-string-interpolation
+
+# Pytest conventions that pylint messes up
+# E0401 - Unable to import
+# E0611 - No name 'conftest' in module 'tests' (no-name-in-module)
+# W0611 - Unused import from fixtures (unused-import)
+# W0613 - Injected fixture interpreted as unused argument (unused-argument)
+# W0621 - Redefining imported fixture as argument (redefined-outer-name)
+
+max-line-length=120
+disable=C0111,R0801,R0903,R0913,R1705,W0212,W1202,W1203,E0401,E0611,W0611,W0613,W0621

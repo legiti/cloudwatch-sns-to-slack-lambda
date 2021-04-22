@@ -1,0 +1,15 @@
+# REPO_SETUP: once this check is passing you may remove this file from the repo
+
+name: Check REPO_SETUP strings
+
+on: push
+
+jobs:
+  check-repo_setup-strings:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Run grep
+      run: if grep -rq  --exclude-dir=.github 'REPO_SETUP' .; then exit 1; else exit 0; fi
