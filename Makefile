@@ -48,5 +48,3 @@ run-dev:
 
 sns-publish:
 	python resources/sns_publish.py
-
-#### Dev helpers
