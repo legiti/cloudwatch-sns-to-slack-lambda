@@ -44,6 +44,9 @@ test: unit-test integration-test
 #### Local development
 
 run-dev:
-	# REPO_SETUP: add this
+	yarn dev:watch
+
+sns-publish:
+	python resources/sns_publish.py
 
 #### Dev helpers

@@ -1,5 +1,24 @@
 # Cloudwatch SNS to Slack Lambda
 
+### Dev setup
+Note: this project has been developed and tested with NodeJS 12.22.1
+
+Generally, you'll want to do two things while developing:
+- Get the Lambda running locally with a local SNS topic that you can publish events to
+- Publish events to the SNS topic to trigger the Lambda
+
+To get the Lambda running for the first time, run `yarn` in the project root to install the necessary dependencies. Then, simply run:
+```
+make run-dev
+```
+
+This will run the Lambda locally as well as create a local SNS topic that you can use to trigger the Lambda.
+
+To publish to the SNS topic, you'll probably want to use the `resources/sns_publish.py` script (requirements in `requirements.dev.txt` in project root). Feel free to modify `resources/example_cloudwatch_sns_message.json` as you please (changes will be ignored), and then publish the message to the local SNS topic via
+```
+make sns-publish
+```
+
 ## Checklist before going to prod
 
 You should keep this in the README before going to prod. Once all boxes are ticked here, and the service is deployed into prod, feel free to remove it.

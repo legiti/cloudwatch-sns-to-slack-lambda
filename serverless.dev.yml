@@ -1,0 +1,31 @@
+service: cloudwatch-sns-to-slack
+
+plugins:
+  - serverless-python-requirements
+  - serverless-pseudo-parameters
+  - serverless-offline-sns
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: python3.8
+  timeout: 60
+  region: sa-east-1
+
+custom:
+  pythonRequirements:
+    slim: true
+
+functions:
+  cloudwatch-sns-to-slack:
+    handler: cloudwatch_sns_to_slack/handler.handler
+    name: cloudwatch-sns-to-slack
+    description: Reads messages posted to SNS by Cloudwatch and publish them to the appropriate Slack channel
+    runtime: python3.8
+    package:
+      exclude:
+        - ./** # We are excluding everything and then only including what we need so we reduce our lambda size
+      include:
+        - cloudwatch_sns_to_slack/**/*.py
+    events:
+      - sns: test-topic

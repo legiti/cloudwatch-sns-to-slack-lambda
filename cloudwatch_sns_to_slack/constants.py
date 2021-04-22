@@ -1,0 +1,1 @@
+SERVICE_NAME = 'cloudwatch_sns_to_slack'
