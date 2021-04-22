@@ -1,3 +1,8 @@
+orbs:
+  serverless-deploy: legiti-tests/serverless-deploy@0.0.21
+
+version: 2.1
+
 jobs:
   lint-unit-test-integration-test:
     docker:
@@ -26,80 +31,23 @@ jobs:
           name: Integration Tests
           command: |
             make integration-test
-  pypi-publish:
-    # REPO_SETUP:
-    # if your repo is not a package: remove this job
-    docker:
-      - image: circleci/python:3.8.5
-        auth:
-          username: legiti
-          password: $DOCKERHUB_PASSWORD
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            # REPO_SETUP: your Circle CI fingerprint for the repo here
-            - placeholder
-      - run:
-          name: Install GitPython, Twine and Packaging
-          command: |
-            python3 -m pip install --user --upgrade GitPython twine packaging
-      - run:
-          name: Prepare Python Package
-          command: |
-            make build-package
-      - run:
-          name: Publish Python Package
-          command: |
-            make publish
 
-version: 2.1
 workflows:
-  # REPO_SETUP:  If an orb is available for your type of project, you should use that instead, for each job.
-  # If you won't be using the lint-unit-test-integration-test job above you should remove it.
-  # More info at https://github.com/legiti/circleci-orbs
   lint-unit-test-integration-test:
     jobs:
-      - lint:
-          context: legiti-variables
+      - lint-unit-test-integration-test:
           filters:
             branches:
               ignore:
-                - master
-                - develop
-  deployment:
+                - main
+  deploy:
     jobs:
-      - staging-deploy:
-          context: legiti-variables
-          staging: true
-          filters:
-            branches:
-              only:
-                - develop
-      - staging-end-to-end-tests:
-          context: legiti-variables
-          staging: true
-          requires:
-            -  staging-deploy
-      - prod-deploy:
-          context: legiti-variables
+      - serverless-deploy/deploy:
+          name: deploy
           production: true
+          application-name: 'cloudwatch-sns-to-slack'
+          python-version: '3.8'
           filters:
             branches:
               only:
-                - master
-      - prod-end-to-end-tests:
-          context: legiti-variables
-          production: true
-          requires:
-            -  prod-deploy
-  # REPO_SETUP:
-  # if your repo is not a package: remove this workflow
-  package-publish:
-    jobs:
-      - pypi-publish:
-          context: legiti-variables
-          filters:
-            branches:
-              only:
-                - master
+                - main

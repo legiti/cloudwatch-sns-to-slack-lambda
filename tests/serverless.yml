@@ -1,0 +1,59 @@
+service: cloudwatch-sns-to-slack
+
+plugins:
+  - serverless-python-requirements
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: python3.8
+  timeout: 60
+  region: sa-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
+      Resource: "arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/*"
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource: "arn:aws:sns:#{AWS::Region}:#{AWS::AccountId}:dlq-hermod-${opt:stage, 'staging'}"
+
+custom:
+  pythonRequirements:
+    slim: true
+
+functions:
+  cloudwatch-sns-to-slack:
+    handler: chargeback_importer/handler.handler
+    onError: ${ssm:/hermod/${self:provider.stage}/dlq_arn}
+    name: chargeback-importer-${self:provider.stage}
+    description: This lambda receives emails with chargebacks spreadsheets so it can parse and then send to hermes
+    runtime: python3.8
+    provisionedConcurrency: ${ssm:/hermod/${self:provider.stage}/provisioned_concurrency}
+    reservedConcurrency: ${ssm:/hermod/${self:provider.stage}/reserved_concurrency}
+    package:
+      exclude:
+        - ./** # We are excluding everything and then only including what we need so we reduce our lambda size
+      include:
+        - chargeback_importer/**/*.py
+    environment:
+      DB_USER: ${ssm:/legiti-db/${self:provider.stage}/inspetor-read-only-username}
+      DB_PASSWORD: ${ssm:/legiti-db/${self:provider.stage}/inspetor-read-only-password~true}
+      DB_HOSTNAME: ${ssm:/legiti-db/${self:provider.stage}/hostname}
+      DB_PORT: ${ssm:/legiti-db/${self:provider.stage}/port}
+      DB_NAME: ${ssm:/legiti-db/${self:provider.stage}/db-name}
+      ENV: ${self:provider.stage}
+    vpc:
+      securityGroupIds:
+        - ${ssm:/legiti-db/${self:provider.stage}/lambda-db-access-security-group}
+      subnetIds:
+        - ${ssm:/legiti-db/${self:provider.stage}/private-subnet-1a}
+        - ${ssm:/legiti-db/${self:provider.stage}/private-subnet-1c}
+    events:
+       - s3:
+          bucket: ${ssm:/chargeback-importer/s3-bucket-name}
+          event: s3:ObjectCreated:*
+          rules:
+              - prefix: ${self:provider.stage}/
+          existing: true
