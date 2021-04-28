@@ -1,7 +1,7 @@
 SERVICE_NAME = 'cloudwatch_sns_to_slack'
 
-GENERIC_ERROR_MESSAGE = f'*URGENT*: Error generating Slack message body from sns_message. ' \
-    'Check {SERVICE_NAME} logs for details. Something is going wrong but we don\'t know what'
+GENERIC_ERROR_MESSAGE = '*URGENT*: Error generating Slack message body from sns_message. ' \
+    f'Check {SERVICE_NAME} logs for details. Something is going wrong but we don\'t know what'
 
 BASE_CLOUDWATCH_ALARM_LINK = "https://sa-east-1.console.aws.amazon.com/cloudwatch/home?region=sa-east-1#alarmsV2:alarm/"
 

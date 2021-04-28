@@ -1,7 +1,6 @@
 import ast
 import json
 import logging
-import os
 
 import requests
 
@@ -37,8 +36,8 @@ def _get_slack_message_body(sns_message):
             ]
         )
         return slack_message_body
-    except Exception as e:
-        logger.error(e)
+    except Exception as err:
+        logger.error(err)
         return GENERIC_ERROR_MESSAGE
 
 
@@ -47,9 +46,19 @@ def _get_severity(sns_message):
         sns_message_dict = ast.literal_eval(sns_message)
         alarm_state = sns_message_dict['NewStateValue']
         return 'danger' if alarm_state == 'ALARM' else 'good'
-    except Exception as e:
-        logger.error(e)
+    except Exception as err:
+        logger.error(err)
         return 'danger'
+
+
+def _post(channel, headers, data):
+    response = requests.post(
+        CHANNEL_TO_WEBHOOKS_MAP[channel],
+        headers=headers,
+        data=json.dumps(data),
+    )
+    if not response.ok:
+        logger.error('Unable to post to Slack...')
 
 
 def _post_message_to_slack(channel, record):
@@ -73,13 +82,10 @@ def _post_message_to_slack(channel, record):
                 }
             ]
         }
-        response = requests.post(
-            CHANNEL_TO_WEBHOOKS_MAP[channel],
-            headers=headers,
-            data=json.dumps(data),
-        )
-    except Exception as e:
-        logger.error(e)
+        _post(channel, headers, data)
+
+    except Exception as err:
+        logger.error(err)
         data = {
             'text': '*' + 'ERROR: unable to post SNS record as Slack message' + '*',
             'username': 'AWS Notification Bot',
@@ -91,11 +97,7 @@ def _post_message_to_slack(channel, record):
                 }
             ]
         }
-        response = requests.post(
-            CHANNEL_TO_WEBHOOKS_MAP[channel],
-            headers=headers,
-            data=json.dumps(data),
-        )
+        _post(channel, headers, data)
 
 
 def get_channel(sns_topic_arn):

@@ -14,7 +14,7 @@ make run-dev
 
 This will run the Lambda locally as well as create a local SNS topic that you can use to trigger the Lambda.
 
-To publish to the SNS topic, you'll probably want to use the `resources/sns_publish.py` script (requirements in `requirements.dev.txt` in project root). Feel free to modify `resources/example_cloudwatch_sns_message.json` as you please (changes will be ignored), and then publish the message to the local SNS topic via
+To publish to the SNS topic, you'll probably want to use the `resources/sns_publish.py` script (requirements in `requirements-dev.txt` in project root). Feel free to modify `resources/example_cloudwatch_sns_message.json` as you please (changes will be ignored), and then publish the message to the local SNS topic via
 ```
 make sns-publish
 ```
