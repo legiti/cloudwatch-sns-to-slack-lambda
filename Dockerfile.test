@@ -11,6 +11,5 @@ RUN --mount=type=cache,target=/root/.cache/pip pip install -r /$PROJECT_NAME/req
 RUN --mount=type=cache,target=/root/.cache/pip pip install -r /$PROJECT_NAME/requirements-dev.txt
 
 COPY . /$PROJECT_NAME
-COPY .pylintrc /$PROJECT_NAME/.pylintrc
 
 WORKDIR /$PROJECT_NAME

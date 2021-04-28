@@ -18,7 +18,7 @@ jobs:
       - run:
           name: Build
           command: |
-            make docker-build
+            make docker-build-test-image
       - run:
           name: Lint
           command: |
