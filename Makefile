@@ -20,12 +20,12 @@ docker-build-test-image:
 	$(docker_run)  bash -c "find . -name '*.py' |  grep -v 'node_modules' | xargs flake8 || exit 1" || exit 1
 
 	echo ">>> LINTING SRC FILES (with pylint)..."
-	$(docker_run) bash -c \
+	$(docker_run_tests) bash -c \
 		"find ./$(project_name) -name '*.py' |  grep -v 'test' |  xargs pylint --rcfile .pylintrc || exit 1" || \
 		exit 1
 
 	echo ">>> LINTING TEST FILES (with pylint)..."
-	$(docker_run) bash -c \
+	$(docker_run_tests) bash -c \
 		"find ./tests -name '*.py' |  xargs pylint --rcfile /$(project_name)/tests/.pylintrc || exit 1" || \
 		exit 1
 
@@ -34,10 +34,10 @@ docker-build-test-image:
 #### Tests
 
 unit-test: docker-build-test-image
-	$(docker_run_python) pytest -s --cov-report term-missing --cov=cloudwatch_sns_to_slack tests/unit/
+	$(docker_run_tests_python) pytest -s --cov-report term-missing --cov=cloudwatch_sns_to_slack tests/unit/
 
 integration-test: docker-build-test-image
-	$(docker_run_python) pytest -s --cov-report term-missing --cov=cloudwatch_sns_to_slack tests/integration/
+	$(docker_run_tests_python) pytest -s --cov-report term-missing --cov=cloudwatch_sns_to_slack tests/integration/
 
 test: unit-test integration-test
 
