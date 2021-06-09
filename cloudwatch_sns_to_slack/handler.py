@@ -6,8 +6,9 @@ import requests
 
 from cloudwatch_sns_to_slack.constants import (
     BASE_CLOUDWATCH_ALARM_LINK,
-    POST_TO_SLACK_WEBHOOK,
     GENERIC_ERROR_MESSAGE,
+    HEADERS,
+    POST_TO_SLACK_WEBHOOK,
     SERVICE_NAME
 )
 
@@ -51,10 +52,10 @@ def _get_severity(sns_message):
         return 'danger'
 
 
-def _post(headers, data):
+def _post(data):
     response = requests.post(
         POST_TO_SLACK_WEBHOOK,
-        headers=headers,
+        headers=HEADERS,
         data=json.dumps(data),
     )
     if not response.ok:
@@ -68,9 +69,6 @@ def _post_message_to_slack(channel, record):
         sns_message = record['Sns']['Message']
         logger.info(f'{sns_message=}')
 
-        headers = {
-            'Content-Type': 'application/json',
-        }
         data = {
             'text': '*' + subject + '*',
             'channel': channel,
@@ -83,7 +81,7 @@ def _post_message_to_slack(channel, record):
                 }
             ]
         }
-        _post(channel, headers, data)
+        _post(data)
 
     except Exception as err:
         logger.error(err)
@@ -99,30 +97,30 @@ def _post_message_to_slack(channel, record):
                 }
             ]
         }
-        _post(headers, data)
+        _post(data)
 
 
-def get_channel(sns_topic_arn):
+def _get_channel(sns_topic_arn):
     slack_topic_prefix = 'slack-'
-    topic_name = sns_topic_arn.split (':')[-1]
+    topic_name = sns_topic_arn.split(':')[-1]
     if topic_name[:6] != slack_topic_prefix:
-        logger.warning(f'Slack messaging behavior not defined for SNS topic {sns_topic_arn}. Will send to #platform-alerts...')
+        logger.warning(f'Slack messaging behavior not defined for SNS topic {sns_topic_arn}. \
+            Will send to #platform-alerts...')
         # return '#platform-alerts'
         return '#test_channel'
     return '#' + topic_name.split(slack_topic_prefix)[-1]
 
 
-
 def handler(event, _):
     logger.info(f'{event=}')
-    try:
-        for record in event['Records']:
-            sns_topic_arn = event["Records"][0]["Sns"]["TopicArn"]
+    for record in event['Records']:
+        try:
+            sns_topic_arn = record['Sns']['TopicArn']
             logger.info(f'SNS message received on SNS topic {sns_topic_arn}')
 
-            channel = get_channel(sns_topic_arn)
+            channel = _get_channel(sns_topic_arn)
 
             _post_message_to_slack(channel, record)
-    except Exception:
-        # _post_message_to_slack('#platform-alerts', record)
-        _post_message_to_slack('#test_channel', record)
+        except Exception:
+            # _post_message_to_slack('#platform-alerts', record)
+            _post_message_to_slack('#test_channel', record)

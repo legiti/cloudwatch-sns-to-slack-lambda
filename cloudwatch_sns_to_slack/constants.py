@@ -5,6 +5,10 @@ GENERIC_ERROR_MESSAGE = '*URGENT*: Error generating Slack message body from sns_
 
 BASE_CLOUDWATCH_ALARM_LINK = "https://sa-east-1.console.aws.amazon.com/cloudwatch/home?region=sa-east-1#alarmsV2:alarm/"
 
+HEADERS = {
+    'Content-Type': 'application/json',
+}
+
 # # Slack channel IDs
 # PLATFORM_ALERTS_CHANNEL_ID = 'C0135LF58BH'
 # TEST_CHANNEL_ID = 'C01A6H83NKA'
