@@ -2,7 +2,6 @@ service: cloudwatch-sns-to-slack
 
 plugins:
   - serverless-python-requirements
-  - serverless-pseudo-parameters
   - serverless-offline-sns
   - serverless-offline
 
@@ -24,7 +23,7 @@ functions:
     runtime: python3.8
     package:
       exclude:
-        - ./** # We are excluding everything and then only including what we need so we reduce our lambda size
+        - ./**
       include:
         - cloudwatch_sns_to_slack/**/*.py
     events:

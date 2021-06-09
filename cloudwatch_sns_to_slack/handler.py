@@ -6,7 +6,7 @@ import requests
 
 from cloudwatch_sns_to_slack.constants import (
     BASE_CLOUDWATCH_ALARM_LINK,
-    CHANNEL_TO_WEBHOOKS_MAP,
+    POST_TO_SLACK_WEBHOOK,
     GENERIC_ERROR_MESSAGE,
     SERVICE_NAME
 )
@@ -51,9 +51,9 @@ def _get_severity(sns_message):
         return 'danger'
 
 
-def _post(channel, headers, data):
+def _post(headers, data):
     response = requests.post(
-        CHANNEL_TO_WEBHOOKS_MAP[channel],
+        POST_TO_SLACK_WEBHOOK,
         headers=headers,
         data=json.dumps(data),
     )
@@ -73,6 +73,7 @@ def _post_message_to_slack(channel, record):
         }
         data = {
             'text': '*' + subject + '*',
+            'channel': channel,
             'username': 'AWS Notification Bot',
             'icon_emoji': ':gratidão:',
             'attachments': [
@@ -88,6 +89,7 @@ def _post_message_to_slack(channel, record):
         logger.error(err)
         data = {
             'text': '*' + 'ERROR: unable to post SNS record as Slack message' + '*',
+            'channel': '#platform-alerts',
             'username': 'AWS Notification Bot',
             'icon_emoji': ':gratidão:',
             'attachments': [
@@ -97,11 +99,18 @@ def _post_message_to_slack(channel, record):
                 }
             ]
         }
-        _post(channel, headers, data)
+        _post(headers, data)
 
 
 def get_channel(sns_topic_arn):
-    return 'test_channel'
+    slack_topic_prefix = 'slack-'
+    topic_name = sns_topic_arn.split (':')[-1]
+    if topic_name[:6] != slack_topic_prefix:
+        logger.warning(f'Slack messaging behavior not defined for SNS topic {sns_topic_arn}. Will send to #platform-alerts...')
+        # return '#platform-alerts'
+        return '#test_channel'
+    return '#' + topic_name.split(slack_topic_prefix)[-1]
+
 
 
 def handler(event, _):
@@ -111,10 +120,9 @@ def handler(event, _):
             sns_topic_arn = event["Records"][0]["Sns"]["TopicArn"]
             logger.info(f'SNS message received on SNS topic {sns_topic_arn}')
 
-            # TODO figure out channel
             channel = get_channel(sns_topic_arn)
 
             _post_message_to_slack(channel, record)
     except Exception:
-        # _post_message_to_slack('platform-alerts', record)
-        _post_message_to_slack('test_channel', record)
+        # _post_message_to_slack('#platform-alerts', record)
+        _post_message_to_slack('#test_channel', record)
