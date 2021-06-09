@@ -1,10 +1,39 @@
 orbs:
-  serverless-deploy: legiti-tests/serverless-deploy@0.0.21
+  legiti-slack: legiti-tests/legiti-slack-messages@0.0.2
+  node: circleci/node@2.0.3
+  serverless: circleci/serverless-framework@1.0.1
 
 version: 2.1
 
 jobs:
-  lint-unit-test-integration-test:
+  deploy:
+      description: |
+        Uses Serverless framework to deploy the most recent build
+      docker:
+        - image: nikolaik/python-nodejs:python3.8-nodejs14
+          auth:
+            username: legiti
+            password: $DOCKERHUB_PASSWORD
+      steps:
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - aws-cli/setup
+        - serverless/setup:
+            app-name: cloudwatch-sns-to-slack
+            org-name: legiti
+        - run:
+            command: npm install
+            name: npm install
+        - run:
+            command: serverless deploy --stage cloudwatch-sns-to-slack
+            name: Deploying new service version in prod
+        - legiti-slack/deploy-success:
+            service-name: cloudwatch-sns-to-slack
+            environment: prod
+        - legiti-slack/deploy-failure: # only sends message on failure
+            service-name: cloudwatch-sns-to-slack
+            environment: prod
+  lint-and-run-tests:
     docker:
       - image: circleci/python:3.8.5
         auth:
@@ -16,26 +45,23 @@ jobs:
           docker_layer_caching: true
           version: 18.09.3
       - run:
-          name: Build
+          name: Build test image
           command: |
             make docker-build-test-image
       - run:
-          name: Lint
+          name: Run linting
           command: |
             make lint
       - run:
-          name: Unit Tests
+          name: Run unit tests
           command: |
             make unit-test
-      - run:
-          name: Integration Tests
-          command: |
-            make integration-test
 
 workflows:
-  lint-unit-test-integration-test:
+  lint-and-run-unit-tests:
     jobs:
-      - lint-unit-test-integration-test:
+      - lint-and-run-unit-tests:
+          context: legiti-variables
           filters:
             branches:
               ignore:
@@ -43,10 +69,8 @@ workflows:
   deploy:
     jobs:
       - serverless-deploy/deploy:
-          name: deploy
-          production: true
-          application-name: 'cloudwatch-sns-to-slack'
-          python-version: '3.8'
+          context: legiti-variables
+          name: Deploy
           filters:
             branches:
               only:
