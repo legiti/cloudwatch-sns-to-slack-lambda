@@ -103,15 +103,15 @@ def _post_message_to_slack(channel, record):
 
 def _get_channel(sns_topic_arn):
     if sns_topic_arn == DEV_SNS_ARN:
-        logger.info(f'Message received on dev SNS topic. Will send to #test_channel...')
+        logger.info('Message received on dev SNS topic. Will send to #test_channel...')
         return '#test_channel'
 
     slack_topic_prefix = 'slack-'
     topic_name = sns_topic_arn.split(':')[-1]
 
     if topic_name[:6] != slack_topic_prefix:
-        logger.warning(f'Slack messaging behavior not defined for SNS topic {sns_topic_arn}.' +
-            'Will send to #platform-alerts...')
+        logger.warning(f'Slack messaging behavior not defined for SNS topic {sns_topic_arn}.')
+        logger.info('Will send to #platform-alerts...')
         return '#platform-alerts'
 
     channel_name = '#' + topic_name.split(slack_topic_prefix)[-1]
