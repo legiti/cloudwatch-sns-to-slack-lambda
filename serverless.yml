@@ -32,5 +32,8 @@ functions:
         - ./** # We are excluding everything and then only including what we need so we reduce our lambda size
       include:
         - cloudwatch_sns_to_slack/**/*.py
-    events:
-      - sns: ${ssm:/cloudwatch_sns_to_slack/cloudwatch_sns_arn}
+    events: # need to add each channel manually; should be created in Canaveral beforehand
+      - sns: ${ssm:/cloudwatch_sns_to_slack/area-51-aws}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/data-quality-alerts}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/platform-alerts}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/test_channel}
