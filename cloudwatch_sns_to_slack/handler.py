@@ -6,6 +6,7 @@ import requests
 
 from cloudwatch_sns_to_slack.constants import (
     BASE_CLOUDWATCH_ALARM_LINK,
+    DEV_SNS_ARN,
     GENERIC_ERROR_MESSAGE,
     HEADERS,
     POST_TO_SLACK_WEBHOOK,
@@ -101,14 +102,21 @@ def _post_message_to_slack(channel, record):
 
 
 def _get_channel(sns_topic_arn):
+    if sns_topic_arn == DEV_SNS_ARN:
+        logger.info(f'Message received on dev SNS topic. Will send to #test_channel...')
+        return '#test_channel'
+
     slack_topic_prefix = 'slack-'
     topic_name = sns_topic_arn.split(':')[-1]
+
     if topic_name[:6] != slack_topic_prefix:
-        logger.warning(f'Slack messaging behavior not defined for SNS topic {sns_topic_arn}. \
-            Will send to #platform-alerts...')
-        # return '#platform-alerts'
-        return '#test_channel'
-    return '#' + topic_name.split(slack_topic_prefix)[-1]
+        logger.warning(f'Slack messaging behavior not defined for SNS topic {sns_topic_arn}.' +
+            'Will send to #platform-alerts...')
+        return '#platform-alerts'
+
+    channel_name = '#' + topic_name.split(slack_topic_prefix)[-1]
+    logger.info(f'Will send message to channel {channel_name}')
+    return channel_name
 
 
 def handler(event, _):
@@ -122,5 +130,6 @@ def handler(event, _):
 
             _post_message_to_slack(channel, record)
         except Exception:
-            # _post_message_to_slack('#platform-alerts', record)
-            _post_message_to_slack('#test_channel', record)
+            # uncomment when developing and comment the last line to spare your friends :)
+            # _post_message_to_slack('#test_channel', record)
+            _post_message_to_slack('#platform-alerts', record)
