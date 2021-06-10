@@ -24,14 +24,14 @@ make sns-publish
 You should keep this in the README before going to prod. Once all boxes are ticked here, and the service is deployed into prod, feel free to remove it.
 
 - docs:
-    - [ ] repo README
+    - [x] repo README
     - [ ] [firefighting helper docs](https://coda.io/d/Firefighting-Resources_dPln74ERCm_/Service-Specific-Tips_suMxX#_lup6E)
 - CI:
-    - [ ] setup the Circle CI project for the repo (through Circle's interface)
+    - [x] setup the Circle CI project for the repo (through Circle's interface)
         - Should you need any additional Circle environment variables, you should prioritize putting them in our [context](https://app.circleci.com/settings/organization/github/legiti/contexts/4cc59443-f597-4168-94ea-463f79f4bdd3), so that they are shared in our organization, rather than being set per repository
-    - [ ] lint, unit and integration tests in all branches except for develop and master (more info on test suites structure [here](https://coda.io/d/Legiti-Backend-and-Data-Science-Development_dZcBe-sb1eb/Test-Suites-Structure_sueoo#_lugDX))
-    - [ ] staging deploy + staging end to end tests in develop
-    - [ ] prod deploy + prod end to end tests in master
+    - [x] lint, unit and integration tests in all branches except for develop and master (more info on test suites structure [here](https://coda.io/d/Legiti-Backend-and-Data-Science-Development_dZcBe-sb1eb/Test-Suites-Structure_sueoo#_lugDX))
+    - [-] staging deploy + staging end to end tests in develop
+    - [x] prod deploy + prod end to end tests in master
     - [ ] branch protection rules (*)
 - prod maintainability:
     - [ ] alarms
