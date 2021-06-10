@@ -33,7 +33,7 @@ jobs:
         - legiti-slack/deploy-failure: # only sends message on failure
             service-name: cloudwatch-sns-to-slack
             environment: prod
-  lint-and-run-tests:
+  lint-and-run-unit-tests:
     docker:
       - image: circleci/python:3.8.5
         auth:
