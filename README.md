@@ -1,6 +1,19 @@
 # Cloudwatch SNS to Slack Lambda
 
-### Dev setup
+This Lambda is used to send CloudWatch notifications to Slack. Which channel the message is sent to is determined based on the name of the SNS topic. At the time of writing, SNS topics exist for:
+- test_channel
+- platform-alerts
+- area-51-aws
+- data-quality-alerts
+
+If you want to add a new channel, you'll need to:
+- Ensure the channel exists in Slack
+- Create the corresponding SNS topic via Canaveral (add another module block [here](https://github.com/legiti/canaveral/blob/master/slack_sns_topics/main.tf#L6-L9))
+- Update the serverless.yml of this service to listen to the new SNS channel
+
+Any errors or unexpected processing in this Lambda will result in messages being sent to #platform-alerts in Slack.
+
+### Development
 Note: this project has been developed and tested with NodeJS 12.22.1
 
 Generally, you'll want to do two things while developing:
@@ -18,6 +31,8 @@ To publish to the SNS topic, you'll probably want to use the `resources/sns_publ
 ```
 make sns-publish
 ```
+
+This service does not have integration or E2E tests.
 
 ## CI
 There is no Staging version (or `develop` branch) of this service. Merges to `main` are automatically deployed via CircleCI.
