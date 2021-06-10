@@ -19,6 +19,9 @@ To publish to the SNS topic, you'll probably want to use the `resources/sns_publ
 make sns-publish
 ```
 
+## CI
+There is no Staging version (or `develop` branch) of this service. Merges to `main` are automatically deployed via CircleCI.
+
 ## Checklist before going to prod
 
 You should keep this in the README before going to prod. Once all boxes are ticked here, and the service is deployed into prod, feel free to remove it.
@@ -32,14 +35,14 @@ You should keep this in the README before going to prod. Once all boxes are tick
     - [x] lint, unit and integration tests in all branches except for develop and master (more info on test suites structure [here](https://coda.io/d/Legiti-Backend-and-Data-Science-Development_dZcBe-sb1eb/Test-Suites-Structure_sueoo#_lugDX))
     - [-] staging deploy + staging end to end tests in develop
     - [x] prod deploy + prod end to end tests in master
-    - [ ] branch protection rules (*)
+    - [x] branch protection rules (*)
 - prod maintainability:
     - [ ] alarms
     - [ ] Logs Insights queries
-    - [ ] add service(s) to [Legiti's architecture diagram](https://coda.io/d/Legiti-Backend-and-Data-Science-Development_dZcBe-sb1eb/Architecture-Diagram_su738#_lubNj)
+    - [-] add service(s) to [Legiti's architecture diagram](https://coda.io/d/Legiti-Backend-and-Data-Science-Development_dZcBe-sb1eb/Architecture-Diagram_su738#_lubNj)
     - [ ] add service(s) to [Legiti's services overview](https://coda.io/d/Legiti-Backend-and-Data-Science-Development_dZcBe-sb1eb/Services-Overview_sux72#_luqpi)
-- [ ] repo should be added to Tech Opportunities Coda doc's GH Sync so that repo's issues get tracked as tech opportunities (feel free to reach out to the doc's maintainer to get help with that)
-- [ ] set up dependabot (**)
+- [-] repo should be added to Tech Opportunities Coda doc's GH Sync so that repo's issues get tracked as tech opportunities (feel free to reach out to the doc's maintainer to get help with that)
+- [x] set up dependabot (**)
 
 (*) Branch protection rules that should be set:
     - for `develop` (if your repo won't have a `develop` branch, these should be applied to `master`):
