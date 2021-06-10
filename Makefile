@@ -17,7 +17,7 @@ docker-build-test-image:
 
 .SILENT lint: docker-build-test-image
 	echo ">>> LINTING FILES (with flake8)..."
-	$(docker_run)  bash -c "find . -name '*.py' |  grep -v 'node_modules' | xargs flake8 || exit 1" || exit 1
+	$(docker_run)  bash -c "find . -name '*.py' |  grep -v 'node_modules' | xargs python -m flake8 || exit 1" || exit 1
 
 	echo ">>> LINTING SRC FILES (with pylint)..."
 	$(docker_run_tests) bash -c \
