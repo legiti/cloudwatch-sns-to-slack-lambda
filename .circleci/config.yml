@@ -17,7 +17,6 @@ jobs:
       steps:
         - setup_remote_docker:
             docker_layer_caching: true
-        - aws-cli/setup
         - serverless/setup:
             app-name: cloudwatch-sns-to-slack
             org-name: legiti
