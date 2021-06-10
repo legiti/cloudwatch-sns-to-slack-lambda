@@ -68,7 +68,7 @@ workflows:
                 - main
   deploy:
     jobs:
-      - serverless-deploy/deploy:
+      - deploy:
           context: legiti-variables
           name: Deploy
           filters:
