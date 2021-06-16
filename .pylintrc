@@ -3,8 +3,9 @@
 # R0903 - Too few public methods
 # R0913 - Too many method arguments
 # R1705 - Unecessary "else" after "return"
+# W0703 - Catching too general exception Exception (broad-except)
 # W1202 - logging-fstring-interpolation
 # W1203 - logging-format-string-interpolation
 
 max-line-length=120
-disable=C0111,R0903,R0913,R1705,W1202,W1203
+disable=C0111,R0903,R0913,R1705,W0703,W1202,W1203

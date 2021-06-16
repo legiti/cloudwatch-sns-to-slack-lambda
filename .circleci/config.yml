@@ -1,5 +1,38 @@
+orbs:
+  legiti-slack: legiti-tests/legiti-slack-messages@0.0.2
+  node: circleci/node@2.0.3
+  serverless: circleci/serverless-framework@1.0.1
+
+version: 2.1
+
 jobs:
-  lint-unit-test-integration-test:
+  deploy:
+      description: |
+        Uses Serverless framework to deploy the most recent build
+      docker:
+        - image: nikolaik/python-nodejs:python3.8-nodejs14
+          auth:
+            username: legiti
+            password: $DOCKERHUB_PASSWORD
+      steps:
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - serverless/setup:
+            app-name: cloudwatch-sns-to-slack
+            org-name: legiti
+        - run:
+            command: npm install
+            name: npm install
+        - run:
+            command: serverless deploy cloudwatch-sns-to-slack
+            name: Deploying new service version
+        - legiti-slack/deploy-success:
+            service-name: cloudwatch-sns-to-slack
+            environment: prod
+        - legiti-slack/deploy-failure: # only sends message on failure
+            service-name: cloudwatch-sns-to-slack
+            environment: prod
+  lint-and-run-unit-tests:
     docker:
       - image: circleci/python:3.8.5
         auth:
@@ -11,95 +44,33 @@ jobs:
           docker_layer_caching: true
           version: 18.09.3
       - run:
-          name: Build
+          name: Build test image
           command: |
-            make docker-build
+            make docker-build-test-image
       - run:
-          name: Lint
+          name: Run linting
           command: |
             make lint
       - run:
-          name: Unit Tests
+          name: Run unit tests
           command: |
             make unit-test
-      - run:
-          name: Integration Tests
-          command: |
-            make integration-test
-  pypi-publish:
-    # REPO_SETUP:
-    # if your repo is not a package: remove this job
-    docker:
-      - image: circleci/python:3.8.5
-        auth:
-          username: legiti
-          password: $DOCKERHUB_PASSWORD
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            # REPO_SETUP: your Circle CI fingerprint for the repo here
-            - placeholder
-      - run:
-          name: Install GitPython, Twine and Packaging
-          command: |
-            python3 -m pip install --user --upgrade GitPython twine packaging
-      - run:
-          name: Prepare Python Package
-          command: |
-            make build-package
-      - run:
-          name: Publish Python Package
-          command: |
-            make publish
 
-version: 2.1
 workflows:
-  # REPO_SETUP:  If an orb is available for your type of project, you should use that instead, for each job.
-  # If you won't be using the lint-unit-test-integration-test job above you should remove it.
-  # More info at https://github.com/legiti/circleci-orbs
-  lint-unit-test-integration-test:
+  lint-and-run-unit-tests:
     jobs:
-      - lint:
+      - lint-and-run-unit-tests:
           context: legiti-variables
           filters:
             branches:
               ignore:
-                - master
-                - develop
-  deployment:
+                - main
+  deploy:
     jobs:
-      - staging-deploy:
+      - deploy:
           context: legiti-variables
-          staging: true
+          name: Deploy
           filters:
             branches:
               only:
-                - develop
-      - staging-end-to-end-tests:
-          context: legiti-variables
-          staging: true
-          requires:
-            -  staging-deploy
-      - prod-deploy:
-          context: legiti-variables
-          production: true
-          filters:
-            branches:
-              only:
-                - master
-      - prod-end-to-end-tests:
-          context: legiti-variables
-          production: true
-          requires:
-            -  prod-deploy
-  # REPO_SETUP:
-  # if your repo is not a package: remove this workflow
-  package-publish:
-    jobs:
-      - pypi-publish:
-          context: legiti-variables
-          filters:
-            branches:
-              only:
-                - master
+                - main

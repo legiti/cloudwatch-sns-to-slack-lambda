@@ -1,0 +1,21 @@
+{
+  "name": "cloudwatch-sns-to-slack",
+  "version": "0.0.1",
+  "description": "Reads messages posted to SNS by Cloudwatch and publish them to the appropriate Slack channel",
+  "main": "index.js",
+  "scripts": {
+    "dev": "sls -c serverless.dev.yml offline start --lambdaPort 9001",
+    "dev:watch": "nodemon --exec yarn dev"
+  },
+  "author": "Legiti",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.7",
+    "serverless-offline-sns": "git://github.com/mj1618/serverless-offline-sns#master",
+    "serverless-pseudo-parameters": "^2.5.0",
+    "serverless-python-requirements": "^5.1.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^6.8.0"
+  }
+}

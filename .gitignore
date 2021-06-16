@@ -15,3 +15,7 @@
 .project
 .pydevproject
 /bin/
+
+# project specific
+node_modules/
+resources/example_cloudwatch_sns_message.json

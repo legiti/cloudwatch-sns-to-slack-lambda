@@ -1,0 +1,39 @@
+service: cloudwatch-sns-to-slack
+
+plugins:
+  - serverless-python-requirements
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: python3.8
+  timeout: 60
+  region: sa-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
+      Resource: "arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/*"
+
+custom:
+  pythonRequirements:
+    slim: true
+
+functions:
+  cloudwatch-sns-to-slack:
+    handler: cloudwatch_sns_to_slack/handler.handler
+    name: cloudwatch-sns-to-slack
+    description: Reads messages posted to SNS by Cloudwatch and publish them to the appropriate Slack channel
+    runtime: python3.8
+    provisionedConcurrency: ${ssm:/cloudwatch_sns_to_slack/${self:provider.stage}/provisioned_concurrency}
+    reservedConcurrency: ${ssm:/cloudwatch_sns_to_slack/${self:provider.stage}/reserved_concurrency}
+    package:
+      exclude:
+        - ./** # We are excluding everything and then only including what we need so we reduce our lambda size
+      include:
+        - cloudwatch_sns_to_slack/**/*.py
+    events: # need to add each channel manually; should be created in Canaveral beforehand
+      - sns: ${ssm:/cloudwatch_sns_to_slack/area-51-aws}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/data-quality-alerts}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/platform-alerts}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/test_channel}
