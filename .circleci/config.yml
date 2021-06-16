@@ -62,16 +62,16 @@ workflows:
     jobs:
       - lint-and-run-unit-tests:
           context: legiti-variables
-          # filters:
-          #   branches:
-          #     ignore:
-          #       - main
+          filters:
+            branches:
+              ignore:
+                - main
   deploy:
     jobs:
       - deploy:
           context: legiti-variables
           name: Deploy
-          # filters:
-          #   branches:
-          #     only:
-          #       - main
+          filters:
+            branches:
+              only:
+                - main
