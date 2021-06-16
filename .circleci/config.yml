@@ -25,7 +25,7 @@ jobs:
             command: npm install
             name: npm install
         - run:
-            command: serverless deploy
+            command: serverless deploy --stage prod
             name: Deploying new service version
         - legiti-slack/deploy-success:
             service-name: cloudwatch-sns-to-slack
