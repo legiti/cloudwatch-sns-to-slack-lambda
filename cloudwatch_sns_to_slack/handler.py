@@ -16,6 +16,7 @@ from cloudwatch_sns_to_slack.constants import (
 logger = logging.getLogger(SERVICE_NAME)
 logger.setLevel(logging.INFO)
 
+
 def _safe_get_sns_message_as_json(sns_message):
     return json.loads(sns_message.replace("'", "\"").replace('None', 'null'))
 
