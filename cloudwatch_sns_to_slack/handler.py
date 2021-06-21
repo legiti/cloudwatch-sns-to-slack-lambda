@@ -1,4 +1,3 @@
-import ast
 import json
 import logging
 
@@ -18,9 +17,13 @@ logger = logging.getLogger(SERVICE_NAME)
 logger.setLevel(logging.INFO)
 
 
+def _safe_get_sns_message_as_json(sns_message):
+    return json.loads(sns_message.replace("'", "\"").replace('None', 'null'))
+
+
 def _get_slack_message_body(sns_message):
     try:
-        sns_message_dict = ast.literal_eval(sns_message)
+        sns_message_dict = _safe_get_sns_message_as_json(sns_message)
         alarm_name_line = f'*Alarm name:* {sns_message_dict["AlarmName"]}'
         alarm_description_line = f'*Alarm Description:* {sns_message_dict["AlarmDescription"]}'
         alarm_state_line = f'*State:* {sns_message_dict["NewStateValue"]}'
@@ -45,7 +48,7 @@ def _get_slack_message_body(sns_message):
 
 def _get_severity(sns_message):
     try:
-        sns_message_dict = ast.literal_eval(sns_message)
+        sns_message_dict = _safe_get_sns_message_as_json(sns_message)
         alarm_state = sns_message_dict['NewStateValue']
         return 'danger' if alarm_state == 'ALARM' else 'good'
     except Exception as err:

@@ -15,6 +15,7 @@ jobs:
             username: legiti
             password: $DOCKERHUB_PASSWORD
       steps:
+        - checkout
         - setup_remote_docker:
             docker_layer_caching: true
         - serverless/setup:
@@ -24,7 +25,7 @@ jobs:
             command: npm install
             name: npm install
         - run:
-            command: serverless deploy cloudwatch-sns-to-slack
+            command: serverless deploy --stage prod
             name: Deploying new service version
         - legiti-slack/deploy-success:
             service-name: cloudwatch-sns-to-slack
