@@ -20,7 +20,9 @@ Generally, you'll want to do two things while developing:
 - Get the Lambda running locally with a local SNS topic that you can publish events to
 - Publish events to the SNS topic to trigger the Lambda
 
-To get the Lambda running for the first time, run `yarn` in the project root to install the necessary dependencies. Then, simply run:
+To get the Lambda running for the first time, run `yarn` in the project root to install the necessary dependencies. You'll also need to export a value for `SLACK_WEBHOOK_URL` to your local environment (if you want to actually post to Slack, you'll need to get this value from 1Password).
+
+Then, simply run:
 ```
 make run-dev
 ```
