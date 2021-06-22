@@ -1,5 +1,6 @@
 import json
 import logging
+from os import getenv
 
 import requests
 
@@ -8,13 +9,14 @@ from cloudwatch_sns_to_slack.constants import (
     DEV_SNS_ARN,
     GENERIC_ERROR_MESSAGE,
     HEADERS,
-    POST_TO_SLACK_WEBHOOK,
     SERVICE_NAME
 )
 
 
 logger = logging.getLogger(SERVICE_NAME)
 logger.setLevel(logging.INFO)
+
+SLACK_WEBHOOK_URL = getenv('SLACK_WEBHOOK_URL')
 
 
 def _safe_get_sns_message_as_json(sns_message):
@@ -58,7 +60,7 @@ def _get_severity(sns_message):
 
 def _post(data):
     response = requests.post(
-        POST_TO_SLACK_WEBHOOK,
+        SLACK_WEBHOOK_URL,
         headers=HEADERS,
         data=json.dumps(data),
     )
