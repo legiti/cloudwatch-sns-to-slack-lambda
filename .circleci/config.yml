@@ -1,5 +1,5 @@
 orbs:
-  legiti-slack: legiti-tests/legiti-slack-messages@0.0.2
+  legiti-slack: legiti-tests/legiti-slack-messages@0.0.4
   node: circleci/node@2.0.3
   serverless: circleci/serverless-framework@1.0.1
 
