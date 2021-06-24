@@ -1,6 +1,6 @@
 {
     "AlarmName": "Example alarm name",
-    "AlarmDescription": "Example alarm description.",
+    "AlarmDescription": "Example alarm description. It's a tricky one with an apostrophe in it!",
     "AWSAccountId":"000000000000",
     "NewStateValue": "ALARM",
     "NewStateReason":"Threshold Crossed: 1 datapoint (10.0) was greater than or equal to the threshold (1.0).",
