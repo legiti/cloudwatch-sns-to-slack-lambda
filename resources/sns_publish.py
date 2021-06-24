@@ -14,5 +14,5 @@ with open(f'{SCRIPT_DIR}/example_cloudwatch_sns_message.json') as json_file:
 sns = boto3.client('sns', endpoint_url='http://127.0.0.1:4002')
 
 sns.publish(TopicArn=DEFAULT_TOPIC_ARN,
-            Message=str(CLOUDWATCH_ALARM_MESSAGE_TEMPLATE),
+            Message=json.dumps(CLOUDWATCH_ALARM_MESSAGE_TEMPLATE),
             Subject='ALARM: "Example alarm name" in South America (Sao Paulo)')
