@@ -25,8 +25,9 @@ functions:
     name: cloudwatch-sns-to-slack
     description: Reads messages posted to SNS by Cloudwatch and publish them to the appropriate Slack channel
     runtime: python3.8
-    provisionedConcurrency: ${ssm:/cloudwatch_sns_to_slack/${self:provider.stage}/provisioned_concurrency}
-    reservedConcurrency: ${ssm:/cloudwatch_sns_to_slack/${self:provider.stage}/reserved_concurrency}
+    environment:
+      SLACK_WEBHOOK_URL: ${env:SLACK_WEBHOOK_URL}
+      RUNNING_IN_PROD: true
     package:
       exclude:
         - ./** # We are excluding everything and then only including what we need so we reduce our lambda size
