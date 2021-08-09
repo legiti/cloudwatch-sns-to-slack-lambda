@@ -28,10 +28,10 @@ jobs:
             command: serverless deploy --stage prod
             name: Deploying new service version
         - legiti-slack/deploy-success:
-            service-name: cloudwatch-sns-to-slack
+            service-name: cloudwatch-sns-to-slack-lambda
             environment: prod
         - legiti-slack/deploy-failure: # only sends message on failure
-            service-name: cloudwatch-sns-to-slack
+            service-name: cloudwatch-sns-to-slack-lambda
             environment: prod
   lint-and-run-unit-tests:
     docker:
