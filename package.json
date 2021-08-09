@@ -11,11 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "nodemon": "^2.0.12",
-    "serverless-offline-sns": "git://github.com/mj1618/serverless-offline-sns#master",
+    "serverless-offline-sns": "^0.76.0",
     "serverless-pseudo-parameters": "^2.5.0",
     "serverless-python-requirements": "^5.1.0"
   },
   "devDependencies": {
-    "serverless-offline": "^6.8.0"
+    "serverless-offline": "^8.0.0"
   }
 }
