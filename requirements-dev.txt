@@ -1,7 +1,7 @@
-astroid==2.6.6
+astroid==2.7.3
 attrs==21.2.0
-boto3==1.18.22
-botocore==1.21.27
+boto3==1.18.32
+botocore==1.21.32
 coverage==5.5
 flake8==3.9.2
 iniconfig==1.1.1
@@ -14,9 +14,9 @@ pluggy==0.13.1
 py==1.10.0
 pycodestyle==2.7.0
 pyflakes==2.3.1
-pylint==2.9.6
+pylint==2.10.2
 pyparsing==2.4.7
-pytest==6.2.4
+pytest==6.2.5
 pytest-cov==2.12.1
 python-dateutil==2.8.2
 s3transfer==0.5.0
