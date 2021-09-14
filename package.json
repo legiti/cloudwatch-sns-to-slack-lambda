@@ -12,7 +12,7 @@
   "dependencies": {
     "nodemon": "^2.0.12",
     "serverless-offline-sns": "^0.76.0",
-    "serverless-pseudo-parameters": "^2.5.0",
+    "serverless-pseudo-parameters": "^2.6.1",
     "serverless-python-requirements": "^5.1.0"
   },
   "devDependencies": {
