@@ -2,7 +2,7 @@
 
 # TODO delete this file?
 
-FROM python:3.8.5
+FROM python:3.10.0
 
 ARG PROJECT_NAME
 
