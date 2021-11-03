@@ -1,7 +1,7 @@
-astroid==2.8.3
+astroid==2.8.4
 attrs==21.2.0
-boto3==1.18.65
-botocore==1.21.65
+boto3==1.19.9
+botocore==1.22.9
 coverage==6.0.2
 flake8==4.0.1
 iniconfig==1.1.1
@@ -15,7 +15,7 @@ py==1.10.0
 pycodestyle==2.8.0
 pyflakes==2.4.0
 pylint==2.11.1
-pyparsing==2.4.7
+pyparsing==3.0.4
 pytest==6.2.5
 pytest-cov==3.0.0
 python-dateutil==2.8.2
