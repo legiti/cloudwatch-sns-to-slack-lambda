@@ -2,7 +2,7 @@ astroid==2.8.4
 attrs==21.2.0
 boto3==1.19.9
 botocore==1.22.9
-coverage==6.0.2
+coverage==6.1.1
 flake8==4.0.1
 iniconfig==1.1.1
 isort==5.10.0
