@@ -10,7 +10,7 @@
   "author": "Legiti",
   "license": "ISC",
   "dependencies": {
-    "nodemon": "^2.0.14",
+    "nodemon": "^2.0.15",
     "serverless-offline-sns": "^0.76.0",
     "serverless-pseudo-parameters": "^2.6.1",
     "serverless-python-requirements": "^5.1.0"
