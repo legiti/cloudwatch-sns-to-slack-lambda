@@ -1,6 +1,6 @@
 # Cloudwatch SNS to Slack Lambda
 
-This Lambda is used to send CloudWatch notifications to Slack. Which channel the message is sent to is determined based on the name of the SNS topic. At the time of writing, SNS topics exist for:
+This Lambda is used to send CloudWatch notifications to Slack. Notifications are also persisted to S3 for future analysis. Which channel the message is sent to is determined based on the name of the SNS topic. At the time of writing, SNS topics exist for:
 - test_channel
 - platform-alerts
 - area-51-aws
