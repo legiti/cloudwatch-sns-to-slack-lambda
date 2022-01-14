@@ -38,8 +38,11 @@ functions:
       include:
         - cloudwatch_sns_to_slack/**/*.py
     events: # need to add each channel manually; should be created in Canaveral beforehand
+      - sns: ${ssm:/cloudwatch_sns_to_slack/apps-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/area-51-aws}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/integration-alerts}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/mlplatform-alerts}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/sre-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/data-quality-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/platform-alerts}
-      - sns: ${ssm:/cloudwatch_sns_to_slack/apps-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/test_channel}
