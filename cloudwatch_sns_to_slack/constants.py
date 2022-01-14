@@ -11,4 +11,4 @@ HEADERS = {
 
 DEV_SNS_ARN = 'arn:aws:sns:sa-east-1:123456789012:test-topic'
 
-S3_BUCKET_NAME = 'com.legiti.cloudwatch-slack-alerts' # hardcoded in serverless.yml too
+S3_BUCKET_NAME = 'com.legiti.cloudwatch-slack-alerts'  # hardcoded in serverless.yml too
