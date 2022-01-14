@@ -2,9 +2,13 @@
 
 This Lambda is used to send CloudWatch notifications to Slack. Notifications are also persisted to S3 for future analysis. Which channel the message is sent to is determined based on the name of the SNS topic. At the time of writing, SNS topics exist for:
 - test_channel
-- platform-alerts
+- apps-alerts
+- integration-alerts
+- mlplatform-alerts
+- sre-alerts
 - area-51-aws
 - data-quality-alerts
+- platform-alerts (deprecated)
 
 If you want to add a new channel, you'll need to:
 - Ensure the channel exists in Slack
