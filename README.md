@@ -5,8 +5,9 @@ This Lambda is used to send CloudWatch notifications to Slack. Notifications are
 - apps-alerts
 - integration-alerts
 - mlplatform-alerts
+- modelagem-alerts
 - sre-alerts
-- area-51-aws
+- area-51-aws (deprecated)
 - data-quality-alerts
 - platform-alerts (deprecated)
 
