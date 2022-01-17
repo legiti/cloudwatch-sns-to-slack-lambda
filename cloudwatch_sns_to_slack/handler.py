@@ -20,7 +20,7 @@ logger = logging.getLogger(SERVICE_NAME)
 logger.setLevel(logging.INFO)
 
 SLACK_WEBHOOK_URL = getenv('SLACK_WEBHOOK_URL')
-SRE_ALERTS_CHANNEL = '#sre-alerts'
+DEFAULT_ALERTS_CHANNEL = '#sre-alerts'
 
 S3_CLIENT = boto3.client('s3')
 
@@ -97,7 +97,7 @@ def _post_message_to_slack(channel, record):
         logger.error(err)
         data = {
             'text': '*' + 'ERROR: unable to post SNS record as Slack message' + '*',
-            'channel': SRE_ALERTS_CHANNEL,
+            'channel': DEFAULT_ALERTS_CHANNEL,
             'username': 'AWS Notification Bot',
             'icon_emoji': ':gratidão:',
             'attachments': [
@@ -120,8 +120,8 @@ def _get_channel(sns_topic_arn):
 
     if topic_name[:6] != slack_topic_prefix:
         logger.warning(f'Slack messaging behavior not defined for SNS topic {sns_topic_arn}.')
-        logger.info(f'Will send to {SRE_ALERTS_CHANNEL}...')
-        return SRE_ALERTS_CHANNEL
+        logger.info(f'Will send to {DEFAULT_ALERTS_CHANNEL}...')
+        return DEFAULT_ALERTS_CHANNEL
 
     channel_name = '#' + topic_name.split(slack_topic_prefix)[-1]
     logger.info(f'Will send message to channel {channel_name}')
@@ -129,7 +129,13 @@ def _get_channel(sns_topic_arn):
 
 
 def _upload_to_s3(record):
-    S3_CLIENT.put_object(Body=json.dumps(record), Bucket=S3_BUCKET_NAME, Key=f'{str(uuid4())}.json')
+    try:
+        sns_topic_arn = record['Sns']['TopicArn']
+        channel = _get_channel(sns_topic_arn)[1:]  # exclude the leading '#' from the channel name
+        S3_CLIENT.put_object(Body=json.dumps(record), Bucket=S3_BUCKET_NAME, Key=f'{channel}_{str(uuid4())}.json')
+    except Exception as err:
+        logger.error(err)
+        _post_message_to_slack(DEFAULT_ALERTS_CHANNEL, record)
 
 
 def handler(event, _):
@@ -142,7 +148,8 @@ def handler(event, _):
             channel = _get_channel(sns_topic_arn)
 
             _post_message_to_slack(channel, record)
-        except Exception:
-            _post_message_to_slack(SRE_ALERTS_CHANNEL, record)
+        except Exception as err:
+            logger.error(err)
+            _post_message_to_slack(DEFAULT_ALERTS_CHANNEL, record)
         finally:
             _upload_to_s3(record)
