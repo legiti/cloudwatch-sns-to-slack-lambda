@@ -14,6 +14,10 @@ provider:
       Action:
         - ssm:GetParameter
       Resource: "arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/*"
+    - Effect: Allow
+      Action:
+        - s3:putObject
+      Resource: "arn:aws:s3:::com.legiti.cloudwatch-slack-alerts/*"
 
 custom:
   pythonRequirements:
@@ -34,8 +38,12 @@ functions:
       include:
         - cloudwatch_sns_to_slack/**/*.py
     events: # need to add each channel manually; should be created in Canaveral beforehand
-      - sns: ${ssm:/cloudwatch_sns_to_slack/area-51-aws}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/apps-alerts}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/area-51-aws} # delete after https://github.com/legiti/canaveral/pull/467 is applied/merges
+      - sns: ${ssm:/cloudwatch_sns_to_slack/integration-alerts}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/mlplatform-alerts}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/modelagem-alerts
+      - sns: ${ssm:/cloudwatch_sns_to_slack/sre-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/data-quality-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/platform-alerts}
-      - sns: ${ssm:/cloudwatch_sns_to_slack/apps-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/test_channel}
