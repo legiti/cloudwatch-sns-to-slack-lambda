@@ -1,4 +1,4 @@
-astroid==2.8.4
+astroid==2.9.3
 attrs==21.4.0
 boto3==1.19.9
 botocore==1.22.9
