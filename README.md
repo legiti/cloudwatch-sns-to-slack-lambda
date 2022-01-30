@@ -1,16 +1,6 @@
 # Cloudwatch SNS to Slack Lambda
 
-This Lambda is used to send CloudWatch notifications to Slack. Notifications are also persisted to S3 for future analysis. Which channel the message is sent to is determined based on the name of the SNS topic. At the time of writing, SNS topics exist for:
-- test_channel
-- apps-alerts-api
-- apps-alerts-mongo
-- integration-alerts
-- mlplatform-alerts
-- modelagem-alerts-ec2
-- sre-alerts
-- area-51-aws (deprecated)
-- data-quality-alerts
-- platform-alerts (deprecated)
+This Lambda is used to send CloudWatch notifications to Slack. Notifications are also persisted to S3 for future analysis. Which channel the message is sent to is determined based on the name of the SNS topic. The configured SNS alerts can be found in the `funcionts.cloudwatch-sns-to-slack.events` section in `serverless.yml`. 
 
 If you want to add a new channel, you'll need to:
 - Ensure the channel exists in Slack
