@@ -39,6 +39,7 @@ functions:
         - cloudwatch_sns_to_slack/**/*.py
     events: # need to add each channel manually; should be created in Canaveral beforehand
       - sns: ${ssm:/cloudwatch_sns_to_slack/apps-alerts-api}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/apps-alerts-inspetor-consumer}
       - sns: ${ssm:/cloudwatch_sns_to_slack/apps-alerts-mongo}
       - sns: ${ssm:/cloudwatch_sns_to_slack/integration-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/integration-alerts-data-quality}
