@@ -43,6 +43,9 @@ functions:
       - sns: ${ssm:/cloudwatch_sns_to_slack/apps-alerts-mongo}
       - sns: ${ssm:/cloudwatch_sns_to_slack/integration-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/integration-alerts-data-quality}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/core-platform-alerts}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/core-platform-alerts-data-quality}
+      - sns: ${ssm:/cloudwatch_sns_to_slack/decisions-engine-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/mlplatform-alerts}
       - sns: ${ssm:/cloudwatch_sns_to_slack/modelagem-alerts-ec2}
       - sns: ${ssm:/cloudwatch_sns_to_slack/sre-alerts}
